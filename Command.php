@@ -68,6 +68,28 @@ class Command extends Component
         return $this->db->get($url, array_merge($this->options, $options), $query);
     }
 
+    public function count($options = [])
+    {
+        $query = $this->queryParts;
+
+        unset($query['size']);
+        unset($query['sort']);
+
+        if (empty($query)) {
+            $query = '{}';
+        }
+        if (is_array($query)) {
+            $query = Json::encode($query);
+        }
+        $url = [$this->index !== null ? $this->index : '_all'];
+        if ($this->type !== null) {
+            $url[] = $this->type;
+        }
+        $url[] = '_count';
+
+        return $this->db->get($url, array_merge($this->options, $options), $query);
+    }
+
     /**
      * Sends a request to the delete by query
      * @param array $options
